@@ -3410,7 +3410,8 @@ function toggleBrokerPanel() {
         }
 
         function getMergedVisitors() {
-            const realVisitors = (guestAgents || []).filter(a => !a.isMain);
+            // Only include agents where isMain is explicitly false (not true or undefined)
+            const realVisitors = (guestAgents || []).filter(a => a.isMain === false);
             if (!DEMO_MODE) return realVisitors;
 
             ensureDemoVisitors();
@@ -3849,7 +3850,7 @@ function toggleBrokerPanel() {
                     // 新访客检测：触发 Star 欢迎气泡（只欢迎真实访客，不欢迎 demo）
                     try {
                         const merged = getMergedVisitors();
-                        const currentIds = new Set((merged || []).filter(a => !a.isMain && !a.isDemo).map(a => a.agentId));
+                        const currentIds = new Set((merged || []).filter(a => a.isMain === false && !a.isDemo).map(a => a.agentId));
 
                         if (!guestWelcomeInitialized) {
                             // 首次初始化不欢迎，避免刷新页面就刷屏
